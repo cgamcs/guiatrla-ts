@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from "react"
 import { db } from "../data/db"
+import type { Guitar as GuitarType, CartItem } from "../types"
 
 const useCart = () => {
-    const initialCart = () => {
+    const initialCart = () : CartItem[] => {
         const localStorageCart = localStorage.getItem('cart')
 
         return localStorageCart ? JSON.parse(localStorageCart) : []
@@ -18,7 +19,7 @@ const useCart = () => {
         localStorage.setItem('cart', JSON.stringify(cart))
     }, [cart])
 
-    function addToCart(item) {
+    function addToCart(item : GuitarType) {
         const itemExist = cart.findIndex(guitar => guitar.id === item.id)
 
         if (itemExist >= 0) {
@@ -26,8 +27,8 @@ const useCart = () => {
             updatedCart[itemExist].quantity++
             setCart(updatedCart)
         } else {
-            item.quantity = 1
-            setCart([...cart, item])
+            const newItem : CartItem = {...item, quantity: 1}
+            setCart([...cart, newItem])
         }
     }
 
